@@ -141,9 +141,15 @@ export function RouletteScreen() {
       <Text style={styles.subtitle}>The wheel chose you. Spin to find out who today.</Text>
 
       <View style={styles.wheelStack}>
-        <RouletteWheel size={280} items={memberItems} rotation={outerRotation} />
+        <RouletteWheel
+          size={288}
+          items={memberItems}
+          rotation={outerRotation}
+          withBall
+          spinning={phase === "spinning"}
+        />
         <View style={styles.innerWheelOverlay}>
-          <RouletteWheel size={140} items={missionItems} rotation={innerRotation} />
+          <RouletteWheel size={132} items={missionItems} rotation={innerRotation} />
         </View>
         <View style={styles.pointer} />
       </View>
@@ -250,18 +256,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: spacing.lg,
+    shadowColor: "#000",
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
   },
   innerWheelOverlay: {
     position: "absolute",
   },
   pointer: {
     position: "absolute",
-    top: -6,
+    top: -4,
     width: 0,
     height: 0,
-    borderLeftWidth: 10,
-    borderRightWidth: 10,
-    borderTopWidth: 16,
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderTopWidth: 10,
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
     borderTopColor: colors.gold,
