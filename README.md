@@ -9,7 +9,7 @@ the first mini-game: **Appreciation Roulette**.
 
 | Concern           | Choice                                                                            |
 | ----------------- | --------------------------------------------------------------------------------- |
-| Mobile app        | [Expo](https://expo.dev) (SDK 57) + React Native 0.86, TypeScript                 |
+| Mobile app        | [Expo](https://expo.dev) (SDK 54) + React Native 0.81, TypeScript                 |
 | Backend           | Firebase (Firestore, Cloud Functions, Auth, Storage)                              |
 | Monorepo          | pnpm workspaces + [Turborepo](https://turbo.build)                                |
 | Navigation        | React Navigation (native-stack)                                                   |
@@ -45,6 +45,12 @@ pnpm --filter mobile start   # or: pnpm dev
 ```
 
 Scan the QR code with Expo Go, or press `i` / `a` for a simulator/emulator.
+
+> The app is pinned to Expo SDK 54 deliberately (not npm's `latest` tag) because the public
+> App Store build of Expo Go only supports the newest SDK or two — brand-new SDKs are often
+> unusable in Expo Go for weeks after they ship on npm. If `expo start` fails in Expo Go with
+> "Project is incompatible," check what SDK Expo Go currently supports before assuming it's a
+> local setup problem.
 
 The app runs with **zero backend setup** out of the box: `EXPO_PUBLIC_DATA_BACKEND` defaults to
 `mock`, which plays the full Roulette loop against local seed data (`src/data/demoGroup.ts`)
