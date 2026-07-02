@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "rouletteSpins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "spinnerId", "order": "ASCENDING" },
+        { "fieldPath": "chestDate", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "pairStats",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "spinnerId", "order": "ASCENDING" },
+        { "fieldPath": "timesPaired", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

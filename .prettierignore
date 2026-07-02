@@ -1,0 +1,8 @@
+node_modules
+.expo
+dist
+lib
+coverage
+pnpm-lock.yaml
+apps/mobile/android
+apps/mobile/ios

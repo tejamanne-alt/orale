@@ -1,3 +1,20 @@
+# Turborepo
+.turbo/
+
+# Build outputs
+/apps/functions/lib/
+/packages/*/lib/
+
+# Expo
+.expo/
+apps/mobile/dist/
+
+# Firebase
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebase/
+
 # Logs
 logs
 *.log
