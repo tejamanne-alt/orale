@@ -18,3 +18,32 @@ export function computeLandingRotation(
   const finalOffset = (360 - center) % 360;
   return minFullSpins * 360 + finalOffset;
 }
+
+/** Point at `distance` from (cx, cy), `angleDeg` measured clockwise from the top (12 o'clock = 0deg). */
+export function polarToCartesian(
+  cx: number,
+  cy: number,
+  distance: number,
+  angleDeg: number,
+): { x: number; y: number } {
+  const rad = (angleDeg * Math.PI) / 180;
+  return { x: cx + distance * Math.sin(rad), y: cy - distance * Math.cos(rad) };
+}
+
+/**
+ * SVG path for a single pocket wedge (a pie slice from `startAngle` to
+ * `endAngle`, both in degrees clockwise from the top), used to render the
+ * roulette wheel's pockets as real pie slices rather than a flat disc.
+ */
+export function describeWedgePath(
+  cx: number,
+  cy: number,
+  radius: number,
+  startAngle: number,
+  endAngle: number,
+): string {
+  const start = polarToCartesian(cx, cy, radius, startAngle);
+  const end = polarToCartesian(cx, cy, radius, endAngle);
+  const largeArcFlag = endAngle - startAngle > 180 ? 1 : 0;
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y} Z`;
+}

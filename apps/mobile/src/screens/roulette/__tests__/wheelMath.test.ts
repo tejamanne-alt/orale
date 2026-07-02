@@ -1,4 +1,9 @@
-import { computeLandingRotation, wedgeCenterAngle } from "../wheelMath";
+import {
+  computeLandingRotation,
+  describeWedgePath,
+  polarToCartesian,
+  wedgeCenterAngle,
+} from "../wheelMath";
 
 describe("wedgeCenterAngle", () => {
   it("splits the circle evenly among items", () => {
@@ -24,5 +29,41 @@ describe("computeLandingRotation", () => {
     const rotation = computeLandingRotation(2, 8, 3);
     expect(rotation).toBeGreaterThanOrEqual(3 * 360);
     expect(rotation).toBeLessThan(4 * 360);
+  });
+});
+
+describe("polarToCartesian", () => {
+  it("places 0deg directly above the center", () => {
+    const { x, y } = polarToCartesian(100, 100, 50, 0);
+    expect(x).toBeCloseTo(100);
+    expect(y).toBeCloseTo(50);
+  });
+
+  it("places 90deg directly right of the center", () => {
+    const { x, y } = polarToCartesian(100, 100, 50, 90);
+    expect(x).toBeCloseTo(150);
+    expect(y).toBeCloseTo(100);
+  });
+
+  it("places 180deg directly below the center", () => {
+    const { x, y } = polarToCartesian(100, 100, 50, 180);
+    expect(x).toBeCloseTo(100);
+    expect(y).toBeCloseTo(150);
+  });
+});
+
+describe("describeWedgePath", () => {
+  it("produces a closed pie-slice path starting and ending at the center", () => {
+    const path = describeWedgePath(100, 100, 50, 0, 90);
+    expect(path.startsWith("M 100 100")).toBe(true);
+    expect(path).toContain("A 50 50 0 0 1");
+    expect(path.endsWith("Z")).toBe(true);
+  });
+
+  it("flags the large-arc when the wedge spans more than a half circle", () => {
+    const wideWedge = describeWedgePath(100, 100, 50, 0, 200);
+    const narrowWedge = describeWedgePath(100, 100, 50, 0, 90);
+    expect(wideWedge).toContain("A 50 50 0 1 1");
+    expect(narrowWedge).toContain("A 50 50 0 0 1");
   });
 });
