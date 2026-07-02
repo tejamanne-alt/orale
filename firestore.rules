@@ -1,0 +1,51 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isGroupMember(groupId) {
+      return isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberIds;
+    }
+
+    match /groups/{groupId} {
+      allow read: if isGroupMember(groupId);
+      allow create: if isSignedIn() &&
+        request.auth.uid == request.resource.data.createdBy &&
+        request.resource.data.memberIds == [request.auth.uid];
+      // Membership changes (accepting an invite) go through a Cloud Function
+      // once invite flows ship, not direct client writes.
+      allow update, delete: if false;
+
+      match /members/{memberId} {
+        allow read: if isGroupMember(groupId);
+        allow create, update: if isSignedIn() && request.auth.uid == memberId;
+        allow delete: if false;
+      }
+
+      // Roulette spins and pair-interaction stats are written exclusively by
+      // the spinRoulette Cloud Function (Admin SDK bypasses these rules) so
+      // the "benevolent rig" can't be gamed from the client.
+      match /rouletteSpins/{spinId} {
+        allow read: if isGroupMember(groupId);
+        allow write: if false;
+      }
+
+      match /pairStats/{pairId} {
+        allow read: if isGroupMember(groupId);
+        allow write: if false;
+      }
+
+      match /submissions/{submissionId} {
+        allow read: if isGroupMember(groupId);
+        allow create: if isGroupMember(groupId) &&
+          request.auth.uid == request.resource.data.submittedBy;
+        allow update, delete: if false;
+      }
+    }
+  }
+}
